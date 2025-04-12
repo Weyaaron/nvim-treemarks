@@ -26,19 +26,16 @@ function module.execute(args)
 			mark_that_is_active_root = mark_el
 		end
 	end
-	local new_root_mark = {
-		file = current_dir .. "/" .. current_file,
-		pos = current_line_pos,
-		uuid = new_root_uuid,
-		is_root = true,
-		is_active_root = true,
-	}
+
+	local new_root_mark = utility.construct_mark()
+	new_root_mark.is_root = true
+	new_root_mark.is_active_root = true
 	if mark_that_is_active_root then
 		marks[mark_that_is_active_root.uuid].is_active_root = false
 	end
 	marks[new_root_mark.uuid] = new_root_mark
 
-	utility.write_json_file(user_config.marks_file, marks)
+	utility.save_marks_by_uuid_to_disk(user_config.marks_file, marks)
 end
 
 function module.stop() end

@@ -12,31 +12,28 @@ end
 function module.execute(args)
 	print("Place mark called")
 
-	local current_file = vim.fn.expand("%")
-	local current_dir = vim.fn.getcwd()
-	local current_line_pos = vim.api.nvim_win_get_cursor(0)
-	local mark_uuid = utility.uuid()
-	local marks = utility.load_json_file(user_config.anchor_file)
 	local marks_with_cwd = utility.load_marks_cwd()
-
-	local most_recently_used = nil
-
-	-- local anchor_of_current_working_dir = nil
-	-- print(vim.inspect(current_anchors))
-	-- for index_el, anchor_el in pairs(current_anchors) do
-	-- 	print(anchor_el.file)
-	-- 	if anchor_el.file:starts(current_dir) then
-	-- 		anchor_of_current_working_dir = anchor_el
-	-- 	end
-	-- end
-	-- if not anchor_of_current_working_dir then
-	-- 	print("No Anchor found. Please place anchor first, see config for details")
-	-- end
-	if anchor_of_current_working_dir then
-		--Deletes the old anchor
-		current_anchors[anchor_of_current_working_dir.uuid] = nil
-		utility.write_json_file(user_config.anchor_file, current_anchors)
+	local root_mark = nil
+	for uuid, mark_el in pairs(marks_with_cwd) do
+		if mark_el.is_active_root then
+			root_mark = mark_el
+		end
 	end
+	if not root_mark then
+		print("No root mark found, not doing anything")
+		do
+			return
+		end
+	end
+	print(vim.inspect(root_mark.uuid))
+	local new_mark = utility.construct_mark()
+	print(vim.inspect(new_mark))
+	new_mark.parent = root_mark.uuid
+	root_mark.children[#root_mark.children + 1] = new_mark.uuid
+	local both_marks = {}
+	both_marks[root_mark.uuid] = root_mark
+	both_marks[new_mark.uuid] = new_mark
+	utility.save_marks_by_uuid_to_disk(user_config.marks_file, both_marks)
 end
 
 function module.stop() end
