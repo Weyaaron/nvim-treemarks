@@ -26,7 +26,6 @@ function utility.filter_task_index_by_tags(task_index, tag_list)
 	return result
 end
 
-
 function utility.extract_text_left_to_right(line, left, right)
 	local result = line:sub(left + 1, right + 1)
 	return result
@@ -428,24 +427,29 @@ function utility.scandir(directory)
 	return t
 end
 
-function utility.load_all_events()
-	local paths = utility.scandir(user_config.event_storage_directory_path)
-	local result = {}
-	for i, v in pairs(paths) do
-		local file = io.open(user_config.event_storage_directory_path .. "/" .. v, "r")
-
-		local data = file:read("a")
-
-		local lines = utility.split_str(data)
-		for ii, line_el in pairs(lines) do
-			if #line_el > 1 then
-				result[#result + 1] = vim.json.decode(line_el)
-			end
-		end
-
-		file:close()
+function utility.load_json_file(target_file_path)
+	--Todo: Deal with nonexisting dir
+	print(target_file_path)
+	local file = io.open(target_file_path, "r")
+	if file == nil then
+		return {}
 	end
-	return result
+
+	local file_content = file:read("a")
+	if file_content == "" then
+		return {}
+	end
+	local data = vim.json.decode(file_content)
+	file:close()
+	return data
+end
+
+function utility.write_json_file(target_file_path, data)
+	os.remove(target_file_path)
+	local file = io.open(target_file_path, "w")
+	local data_as_str = vim.json.encode(data)
+	file:write(data_as_str)
+	file:close()
 end
 
 local function construct_words_line_from_template(template_name)

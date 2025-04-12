@@ -2,7 +2,6 @@ local user_config = require("nvim-treemarks.user_config")
 local module = {}
 
 local function configure(args)
-    print("Config run")
 	-- for i, v in pairs(args) do
 	-- 	if type(v) == "table" and string.find(i, "_args") then
 	-- 		for ii, vv in pairs(v) do

@@ -1,6 +1,7 @@
 local user_config = {
 	dev_mode = false,
-	event_storage_directory_path = vim.fn.stdpath("data") .. "/nvim-treemarks/", -- The path used to store events.
+	marks_file = vim.fn.stdpath("data") .. "/nvim-treemarks/marks.json", -- The path used to store marks
+	anchor_file = vim.fn.stdpath("data") .. "/nvim-treemarks/anchor.json", -- The path used to store a anchor.
 	logging_args = {
 		enable_logging = true,
 		--According to https://neovim.io/doc/user/starting.html#_standard-paths, as of 2025-01, log currently points to state.

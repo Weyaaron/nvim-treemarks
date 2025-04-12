@@ -10,7 +10,7 @@ function string.starts(String, Start)
 end
 
 function module.execute(args)
-	print("Place Anchor called")
+	print("Place mark called")
 
 	local current_file = vim.fn.expand("%")
 	local current_dir = vim.fn.getcwd()
@@ -19,21 +19,19 @@ function module.execute(args)
 	local current_anchors = utility.load_json_file(user_config.anchor_file)
 
 	local anchor_of_current_working_dir = nil
-
+	print(vim.inspect(current_anchors))
 	for index_el, anchor_el in pairs(current_anchors) do
-		print(anchor_el.file, current_dir)
+		print(anchor_el.file)
 		if anchor_el.file:starts(current_dir) then
 			anchor_of_current_working_dir = anchor_el
-			break
 		end
 	end
-	if anchor_of_current_working_dir then
-		print("Anchor for current directory found, please delete or override it. See config for details.")
-	end
 	if not anchor_of_current_working_dir then
-		local full_data = { file = current_dir .. "/" .. current_file, pos = current_line_pos, uuid = anchor_uuid }
-
-		current_anchors[anchor_uuid] = full_data
+		print("No Anchor found. Please place anchor first, see config for details")
+	end
+	if anchor_of_current_working_dir then
+		--Deletes the old anchor
+		current_anchors[anchor_of_current_working_dir.uuid] = nil
 		utility.write_json_file(user_config.anchor_file, current_anchors)
 	end
 end
