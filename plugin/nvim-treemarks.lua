@@ -10,7 +10,9 @@ local function my_cmd(opts)
 	local sub_args = vim.list_slice(opts.fargs, 2, #opts.fargs)
 	local subcommand = subcommand_tbl[subcommand_key]
 	if not subcommand then
-		print("TreeMarks subcommand: " .. subcommand_key .. " is not supported! Please check for spelling/open a issue.")
+		print(
+			"TreeMarks subcommand: " .. subcommand_key .. " is not supported! Please check for spelling/open a issue."
+		)
 		return
 	end
 	if subcommand then

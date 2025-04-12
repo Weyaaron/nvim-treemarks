@@ -7,28 +7,17 @@ function utility.parse_into_root()
 	local tree = parser:parse({ 1, 100 })[1]
 	return tree:root()
 end
-function utility.filter_task_index_by_tags(task_index, tag_list)
-	local result = {}
-	for i, v in pairs(task_index) do
-		result[i] = v
-	end
-	local key_table = {}
-	for i, v in pairs(tag_list) do
-		key_table[v] = true
-	end
-	for index, value in pairs(result) do
-		for ii, tag_el in pairs(value.metadata.tags) do
-			if key_table[tag_el] then
-				result[value.name] = nil
-			end
+
+function utility.load_marks_cwd()
+	local filtered_marks = {}
+	local all_marks = utility.load_json_file(user_config.marks_file)
+	local current_dir = vim.fn.getcwd()
+	for uuid_el, mark_el in pairs(all_marks) do
+		if mark_el.file:starts(current_dir) then
+			filtered_marks[mark_el.uuid] = mark_el
 		end
 	end
-	return result
-end
-
-function utility.extract_text_left_to_right(line, left, right)
-	local result = line:sub(left + 1, right + 1)
-	return result
+	return filtered_marks
 end
 
 function utility.replace_content_in_md(original_content, new_content, boundary_counter)
@@ -429,7 +418,6 @@ end
 
 function utility.load_json_file(target_file_path)
 	--Todo: Deal with nonexisting dir
-	print(target_file_path)
 	local file = io.open(target_file_path, "r")
 	if file == nil then
 		return {}

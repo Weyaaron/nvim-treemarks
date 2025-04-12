@@ -1,8 +1,10 @@
-local place_anchor = require("nvim-treemarks.actions.place_anchor")
-local place_tree_mark = require("nvim-treemarks.actions.place_tree_mark")
+local place_root_mark = require("nvim-treemarks.actions.place_root_mark")
+local goto_root_mark = require("nvim-treemarks.actions.goto_root")
+local place_child_mark = require("nvim-treemarks.actions.place_tree_mark")
 local module = {
-	PlaceAnchor = place_anchor,
-	PlaceTreeMark = place_tree_mark,
+	PlaceRootMark = place_root_mark,
+	PlaceChildMark = place_child_mark,
+	GotoRootMark = goto_root_mark,
 }
 
 return module
