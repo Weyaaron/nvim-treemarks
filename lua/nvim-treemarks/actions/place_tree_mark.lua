@@ -13,18 +13,6 @@ function module.execute(args)
 	print("Place mark called")
 
 	local marks_with_cwd = utility.load_marks_cwd()
-	local root_mark = nil
-	for uuid, mark_el in pairs(marks_with_cwd) do
-		if mark_el.is_active_root then
-			root_mark = mark_el
-		end
-	end
-	if not root_mark then
-		print("No root mark found, not doing anything")
-		do
-			return
-		end
-	end
 	local both_marks = {}
 
 	--Todo: Rework
@@ -37,7 +25,7 @@ function module.execute(args)
 		end
 		local choosen_mark = nil
 		for uuid, mark_el in pairs(marks_with_cwd) do
-			if uuid:starts(input) then
+			if uuid == input then
 				choosen_mark = mark_el
 			end
 		end

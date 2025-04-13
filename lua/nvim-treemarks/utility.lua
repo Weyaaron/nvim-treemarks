@@ -7,6 +7,19 @@ function utility.construct_prompt_from_mark(mark_as_table)
 	return mark_as_table.uuid
 end
 
+function utility.string_starts_with(input_str, str_prefix)
+	return string.sub(input_str, 1, string.len(str_prefix)) == str_prefix
+end
+
+function utility.choose_root_from_list(initial_list)
+	local mark_that_is_active_root = nil
+	for uuid, mark_el in pairs(initial_list) do
+		if mark_el.is_root and mark_el.is_active_root then
+			mark_that_is_active_root = mark_el
+		end
+	end
+	return mark_that_is_active_root
+end
 function utility.construct_mark()
 	local current_file = vim.fn.expand("%")
 	local current_dir = vim.fn.getcwd()
@@ -33,7 +46,7 @@ function utility.load_marks_cwd()
 	local current_dir = vim.fn.getcwd()
 	for uuid_el, mark_el in pairs(all_tree_data) do
 		-- print(vim.inspect(mark_el))
-		if mark_el.file:starts(current_dir) then
+		if utility.string_starts_with(mark_el.file, current_dir) then
 			marks_with_cwd[mark_el.uuid] = mark_el
 		end
 	end
