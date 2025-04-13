@@ -3,6 +3,10 @@ local user_config = require("nvim-treemarks.user_config")
 
 local utility = {}
 
+function utility.construct_prompt_from_mark(mark_as_table)
+	return mark_as_table.uuid
+end
+
 function utility.construct_mark()
 	local current_file = vim.fn.expand("%")
 	local current_dir = vim.fn.getcwd()
@@ -28,7 +32,7 @@ function utility.load_marks_cwd()
 
 	local current_dir = vim.fn.getcwd()
 	for uuid_el, mark_el in pairs(all_tree_data) do
-		print(vim.inspect(mark_el))
+		-- print(vim.inspect(mark_el))
 		if mark_el.file:starts(current_dir) then
 			marks_with_cwd[mark_el.uuid] = mark_el
 		end
