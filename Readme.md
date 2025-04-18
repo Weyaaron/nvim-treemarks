@@ -60,6 +60,8 @@ might change, and if you leave this in your config these changes are not propaga
 ```lua
 local treemarks= require("nvim-treemarks")
 treemarks.configure({ -- All of these options work for 'opts' of lazy as well.
+
+	filter_marks_by_git_branch = true, -- Wether marks should be filtered by git-branch,
 })
 ```
 

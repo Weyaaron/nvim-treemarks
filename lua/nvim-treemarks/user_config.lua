@@ -1,6 +1,7 @@
 local user_config = {
 	dev_mode = false,
 	marks_file = vim.fn.stdpath("data") .. "/nvim-treemarks/marks.json", -- The path used to store the marks.
+	filter_marks_by_git_branch = true, -- Wether marks should be filtered by git-branch,
 	logging_args = {
 		enable_logging = true,
 		--According to https://neovim.io/doc/user/starting.html#_standard-paths, as of 2025-01, log currently points to state.

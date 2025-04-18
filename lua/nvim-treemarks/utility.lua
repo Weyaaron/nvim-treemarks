@@ -25,6 +25,7 @@ function utility.construct_mark()
 	local current_dir = vim.fn.getcwd()
 	local current_line_pos = vim.api.nvim_win_get_cursor(0)
 	local mark_uuid = utility.uuid()
+	local current_branch = utility.determine_current_branch()
 
 	local result = {
 		file = current_dir .. "/" .. current_file,
@@ -34,20 +35,32 @@ function utility.construct_mark()
 		is_active_root = false,
 		parent = nil,
 		children = {},
+		git_branch = current_branch,
 	}
 	return result
 end
 
+function utility.determine_current_branch()
+	local job_res = vim.system({ "git", "branch", "--show-current" }, { text = true }):wait()
+	return utility.split_str(job_res.stdout, "\n")[1]
+end
 function utility.load_marks_cwd()
 	--Todo: Add Support for multiple Trees per working dir
 	local marks_with_cwd = {}
 	local all_tree_data = utility.load_json_file(user_config.marks_file)
-
+	local current_branch = utility.determine_current_branch()
+	--Todo: Rework into generic filter function with (name, value) pairs as args
 	local current_dir = vim.fn.getcwd()
 	for uuid_el, mark_el in pairs(all_tree_data) do
-		-- print(vim.inspect(mark_el))
+		print(vim.inspect(mark_el))
 		if utility.string_starts_with(mark_el.file, current_dir) then
-			marks_with_cwd[mark_el.uuid] = mark_el
+			local mark_is_on_current_branch = (mark_el.git_branch == current_branch)
+			if not user_config.filter_marks_by_git_branch then
+				marks_with_cwd[mark_el.uuid] = mark_el
+			end
+			if user_config.filter_marks_by_git_branch and mark_is_on_current_branch then
+				marks_with_cwd[mark_el.uuid] = mark_el
+			end
 		end
 	end
 	return marks_with_cwd
@@ -121,17 +134,6 @@ function utility.split_str(input, sep)
 		return { input }
 	end
 	return res
-end
-
-function utility.load_line_template(template_content)
-	local lines = {}
-
-	local template_as_line = string.gsub(template_content, "\n", " ")
-	for i = 1, #template_as_line, internal_config.line_length do
-		local current_text = string.sub(template_as_line, i, i + internal_config.line_length)
-		lines[#lines + 1] = current_text
-	end
-	return table.concat(lines, "\n")
 end
 function utility.flatten(input_table, resulting_table)
 	if type(input_table) ~= "table" then
