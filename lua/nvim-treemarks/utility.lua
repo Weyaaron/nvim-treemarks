@@ -44,16 +44,33 @@ function utility.determine_current_branch()
 	local job_res = vim.system({ "git", "branch", "--show-current" }, { text = true }):wait()
 	return utility.split_str(job_res.stdout, "\n")[1]
 end
+
+function utility.filter_table(input_table, filter_args)
+	-- "key", "value", cmp_func
+	local result = {}
+	for i, filtered_el in pairs(input_table) do
+		local should_be_kept = true
+		for ii, filter_triple_el in pairs(filter_args) do
+			should_be_kept = filter_triple_el[3](filtered_el[filter_triple_el[1]], filter_triple_el[2])
+		end
+		if should_be_kept then
+			result[i] = filtered_el
+		end
+	end
+	return result
+end
+
 function utility.load_marks_cwd()
 	--Todo: Add Support for multiple Trees per working dir
 	local marks_with_cwd = {}
 	local all_tree_data = utility.load_json_file(user_config.marks_file)
 	local current_branch = utility.determine_current_branch()
 	--Todo: Rework into generic filter function with (name, value) pairs as args
+	--Todo: Integrate the written filter func
 	local current_dir = vim.fn.getcwd()
 	for uuid_el, mark_el in pairs(all_tree_data) do
-		print(vim.inspect(mark_el))
 		if utility.string_starts_with(mark_el.file, current_dir) then
+			-- marks_with_cwd[mark_el.uuid] = mark_el
 			local mark_is_on_current_branch = (mark_el.git_branch == current_branch)
 			if not user_config.filter_marks_by_git_branch then
 				marks_with_cwd[mark_el.uuid] = mark_el

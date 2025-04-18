@@ -38,18 +38,14 @@ function module.execute(args)
 
 		local new_mark = utility.construct_mark()
 		new_mark.parent = choosen_mark.uuid
-		marks_with_cwd[choosen_mark.uuid].children[#root_mark.children + 1] = new_mark.uuid
+		marks_with_cwd[choosen_mark.uuid].children[#marks_with_cwd[choosen_mark.uuid].children + 1] = new_mark.uuid
 		both_marks[choosen_mark.uuid] = choosen_mark
 		both_marks[new_mark.uuid] = new_mark
 		utility.save_marks_by_uuid_to_disk(user_config.marks_file, both_marks)
-		print(vim.inspect(choosen_mark))
 	end
 
 	local telescope_ui = require("nvim-treemarks.selection_methods").TelescopeUI
 	telescope_ui.choose_async(marks_with_cwd, on_action)
-
-	-- local uuids = utility.get_keys(marks_with_cwd)
-	-- vim.ui.input({ prompt = "Enter a uuid to choose a parent:\n" .. table.concat(uuids, "\n") }, on_action)
 end
 
 function module.stop() end
