@@ -2,11 +2,14 @@
 
 [![License: GPL](https://img.shields.io/badge/License-GPL-brightgreen.svg)](https://opensource.org/license/gpl-3-0/)
 
-This code implements a Neovim Plugin for moving through code 
+
+# As of 2025-04, WIP!
+This code implements a Neovim Plugin for moving through code
 based on a tree of marks.
 
-As of 2025-04, this is just an idea, the code is a 1:1  copy of 
-one of my other plugins to get started on. 
+It provides usefull functions for moving through marks,
+such as sending them to the qickfix-list or iteration.
+
 
 # Getting Started
 ## Installation
@@ -25,23 +28,22 @@ local plugin_list = {
 lazy.setup(plugin_list)
 ```
 
-## How to train 
-This plugin uses subcommands of `TreeMarks` to activate certain functions.
-All of these commands support completion, just use `Tab` and you will be fine.
-Currently, these are the available options:
+## How to Setup/Introduction to Actions
+This plugin uses subcommands of `TreeMarks` to activate certain actions.
+They are not intended for "interactive" use, but should be used through
+keybinds.
+Currently, these are the available actions:
 
 | Name | Syntax | Description |
 | --- | -------- | -------- |
-| Start | `:Training Start [Scheduler] [Task-Collection A] [Task Collection B] ...`| Starts a session with the choosen scheduler and the choosen task collections. Both arguments are optional. |
-| Stop | `:Training Stop`| Stops a session. |
-| Analyze | `:Training Analyze`| Prints some statistics about your progress. |
-
-The plugin aims to use scratch-buffers to avoid polluting the disk.
+| Start | `:TreeMarks PlaceRootMark `| Places a root mark at the cursor location. |
 
 
 # Philosophy
 
--TODO
+I noticed that when navigating code there is a structure to the movement that
+lends itself to presentation as a tree. Furthermore, I have not found
+a suitable plugin for motions across files. So I wrote my own.
 
 
 # Contributions
@@ -62,12 +64,8 @@ treemarks.configure({ -- All of these options work for 'opts' of lazy as well.
 ```
 
 # Goals
-Todo
-- 
-
-# Non-Goals
-TODo
-
+- Provide a variety of movement options based on a tree of marks
+- Support marks per project and per Git-Branch.
 
 # On Contributions
 Contributions are welcome! Any input is appreciated, be it a bug report, a feature request, or a pull request.
