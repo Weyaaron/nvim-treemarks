@@ -9,21 +9,28 @@ function module.setup(args) end
 
 function module.choose(initial_list) end
 function module.choose_async(initial_list, callback)
-	local table_as_strs = {}
+	local indexed_table = {}
 	for i, v in pairs(initial_list) do
-		table_as_strs[#table_as_strs + 1] = v.uuid
+		indexed_table[#indexed_table + 1] = v
 	end
-	print(vim.inspect(table_as_strs))
+
+	local finder = finders.new_table({
+		results = indexed_table,
+		entry_maker = function(entry)
+			return {
+				value = entry,
+				display = entry.uuid,
+				ordinal = entry.uuid,
+				path = entry.file,
+				lnum = entry.pos[1],
+			}
+		end,
+	})
 	pickers
 		.new({}, {
 			prompt_title = "TreeMarks",
-			finder = finders.new_table({
-				results = table_as_strs,
-				-- function(entry)
-				-- 	-- print(vim.inspect(entry))
-				-- 	return { value = entry.uuid, display = entry.uuid }
-				-- end,
-			}),
+			finder = finder,
+			previewer = conf.file_previewer({}),
 			sorter = conf.generic_sorter({}),
 			attach_mappings = function(prompt_bufnr, map)
 				actions.select_default:replace(function()
@@ -32,7 +39,7 @@ function module.choose_async(initial_list, callback)
 					print(vim.inspect(selection))
 					-- vim.api.nvim_put({ selection[1] }, "", false, true)
 					-- As long as we match the original uuid we are fine with this
-					callback(selection[1])
+					callback(selection["value"].uuid)
 				end)
 				return true
 			end,

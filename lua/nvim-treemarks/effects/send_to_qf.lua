@@ -12,7 +12,6 @@ function module.execute_many(uuid_list)
 	for uuid, mark_el in pairs(marks_with_cwd) do
 		file_pointers[#file_pointers + 1] = { filename = mark_el.file, lnum = mark_el.pos[1] }
 	end
-	-- print(vim.inspect(file_pointers))
 
 	vim.fn.setqflist({}, "r")
 	vim.fn.setqflist(file_pointers, "a")
