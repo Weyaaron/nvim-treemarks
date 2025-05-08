@@ -1,5 +1,6 @@
 local user_config = {
 	dev_mode = false,
+	--Todo: Deal with nonexistend dir!
 	marks_file = vim.fn.stdpath("data") .. "/nvim-treemarks/marks.json", -- The path used to store the marks.
 	filter_marks_by_git_branch = true, -- Wether marks should be filtered by git-branch,
 	logging_args = {

@@ -15,7 +15,8 @@ function module.execute(args)
 	local marks_with_cwd = utility.load_marks_cwd()
 	local both_marks = {}
 
-	--Todo: Rework
+	-- local root = utility.choose_root_from_list(marks_with_cwd)
+	--Todo: Do no activate if there is just a single root
 	local function on_action(input)
 		if not input then
 			print("No choice, will do nothing")
@@ -45,6 +46,7 @@ function module.execute(args)
 	end
 
 	local telescope_ui = require("nvim-treemarks.selection_methods").TelescopeUI
+
 	telescope_ui.choose_async(marks_with_cwd, on_action)
 end
 

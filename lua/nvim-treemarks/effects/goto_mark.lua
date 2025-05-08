@@ -23,11 +23,7 @@ function module.execute(mark_uuid)
 			return
 		end
 	end
-	local new_file_pos = choosen_mark.file
-	local new_cp_pos = choosen_mark.pos
-	vim.cmd("e" .. new_file_pos)
-	vim.api.nvim_win_set_cursor(0, new_cp_pos)
-
+	utility.move_to_mark(choosen_mark)
 	print("Exetuting move to mark")
 end
 

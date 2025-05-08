@@ -5,14 +5,15 @@
 
 # As of 2025-04, WIP!
 This code implements a Neovim Plugin for moving through code
-based on a tree of marks.
+based on a tree of marks. 
+
 
 It provides usefull functions for moving through marks,
 such as sending them to the qickfix-list or iteration.
 
 
 # Getting Started
-## Installation
+## Installation(As of 2025-04 on your own risk)
 Install it using the plugin manager of your choice.
 [Lazy](https://github.com/folke/lazy.nvim) is tested,
 if any other fails, please open an issue. Pinning your local installation to a fixed version is encouraged.

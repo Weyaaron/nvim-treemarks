@@ -11,6 +11,33 @@ function utility.string_starts_with(input_str, str_prefix)
 	return string.sub(input_str, 1, string.len(str_prefix)) == str_prefix
 end
 
+function utility.resolve_children(starting_mark, marks_table)
+	local result = {}
+
+	for i, uuid_el in pairs(starting_mark.children) do
+		result[uuid_el] = marks_table[uuid_el]
+	end
+	return result
+end
+
+function utility.open_mark_as_window(mark, args)
+	local curr_buff = vim.api.nvim_win_get_buf(0)
+	local new_window = vim.api.nvim_open_win(curr_buff, false, { split = "right", win = 0 })
+
+	vim.api.nvim_set_current_win(new_window)
+	utility.move_to_mark(mark)
+end
+
+function utility.move_to_mark(target_mark)
+	if not target_mark then
+		return
+	end
+	local new_file_pos = target_mark.file
+	local new_cp_pos = target_mark.pos
+	vim.cmd("e" .. new_file_pos)
+	vim.api.nvim_win_set_cursor(0, new_cp_pos)
+end
+
 function utility.choose_root_from_list(initial_list)
 	local mark_that_is_active_root = nil
 	for uuid, mark_el in pairs(initial_list) do
@@ -21,6 +48,7 @@ function utility.choose_root_from_list(initial_list)
 	return mark_that_is_active_root
 end
 function utility.construct_mark()
+	--Todo: Rework to work with invalid values
 	local current_file = vim.fn.expand("%")
 	local current_dir = vim.fn.getcwd()
 	local current_line_pos = vim.api.nvim_win_get_cursor(0)
@@ -28,7 +56,7 @@ function utility.construct_mark()
 	local current_branch = utility.determine_current_branch()
 
 	local result = {
-		file = current_dir .. "/" .. current_file,
+		file = current_file,
 		pos = current_line_pos,
 		uuid = mark_uuid,
 		is_root = false,
@@ -37,6 +65,7 @@ function utility.construct_mark()
 		children = {},
 		git_branch = current_branch,
 	}
+	print("res", vim.inspect(result))
 	return result
 end
 
