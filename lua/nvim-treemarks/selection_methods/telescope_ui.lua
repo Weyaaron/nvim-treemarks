@@ -3,24 +3,31 @@ local finders = require("telescope.finders")
 local conf = require("telescope.config").values
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
+local utility = require("nvim-treemarks.utility")
+
 local module = {}
 
 function module.setup(args) end
 
 function module.choose(initial_list) end
-function module.choose_async(initial_list, callback)
-	local indexed_table = {}
-	for i, v in pairs(initial_list) do
-		indexed_table[#indexed_table + 1] = v
-	end
-
+function module.choose_async(initial_table, callback)
+	local indexed_table = utility.construct_i_indexed_table(initial_table)
 	local finder = finders.new_table({
 		results = indexed_table,
 		entry_maker = function(entry)
+			local displayed_name = entry.uuid
+			-- print(vim.inspect(entry))
+
+			if entry.name then
+				if #entry.name > 0 then
+					displayed_name = entry.name
+				end
+			end
+
 			return {
 				value = entry,
-				display = entry.uuid,
-				ordinal = entry.uuid,
+				display = displayed_name,
+				ordinal = displayed_name,
 				path = entry.file,
 				lnum = entry.pos[1],
 			}
@@ -36,10 +43,12 @@ function module.choose_async(initial_list, callback)
 				actions.select_default:replace(function()
 					actions.close(prompt_bufnr)
 					local selection = action_state.get_selected_entry()
-					print(vim.inspect(selection))
+					-- print(vim.inspect(selection))
 					-- vim.api.nvim_put({ selection[1] }, "", false, true)
 					-- As long as we match the original uuid we are fine with this
-					callback(selection["value"].uuid)
+					if selection then
+						callback(selection["value"].uuid)
+					end
 				end)
 				return true
 			end,

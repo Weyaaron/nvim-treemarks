@@ -12,7 +12,7 @@ function module.execute(mark_uuid)
 			return
 		end
 	end
-	print("Choosen uid", mark_uuid)
+	-- print("Choosen uid", mark_uuid)
 
 	local marks_with_cwd = utility.load_marks_cwd()
 	-- print(vim.inspect(marks_with_cwd))

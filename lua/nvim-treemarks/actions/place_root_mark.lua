@@ -21,6 +21,16 @@ function module.execute(args)
 	end
 	marks[new_root_mark.uuid] = new_root_mark
 
+	local callback = function(user_input)
+		if #user_input > 0 then
+			print("You have chosen the name" .. user_input)
+			new_root_mark.name = user_input
+			marks[new_root_mark.uuid] = new_root_mark
+			utility.save_marks_by_uuid_to_disk(user_config.marks_file, marks)
+		end
+	end
+	vim.ui.input({ prompt = "Please enter a Name for this mark:" }, callback)
+
 	utility.save_marks_by_uuid_to_disk(user_config.marks_file, marks)
 end
 

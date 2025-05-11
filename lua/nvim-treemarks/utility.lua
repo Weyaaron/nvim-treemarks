@@ -11,6 +11,17 @@ function utility.string_starts_with(input_str, str_prefix)
 	return string.sub(input_str, 1, string.len(str_prefix)) == str_prefix
 end
 
+function utility.construct_i_indexed_table(input_table)
+	if not input_table then
+		return {}
+	end
+	local indexed_table = {}
+	for i, v in pairs(input_table) do
+		indexed_table[#indexed_table + 1] = v
+	end
+	return indexed_table
+end
+
 function utility.resolve_children(starting_mark, marks_table)
 	local result = {}
 
@@ -56,7 +67,7 @@ function utility.construct_mark()
 	local current_branch = utility.determine_current_branch()
 
 	local result = {
-		file = current_file,
+		file = current_dir .. "/" .. current_file,
 		pos = current_line_pos,
 		uuid = mark_uuid,
 		is_root = false,
@@ -65,7 +76,7 @@ function utility.construct_mark()
 		children = {},
 		git_branch = current_branch,
 	}
-	print("res", vim.inspect(result))
+
 	return result
 end
 
@@ -109,6 +120,7 @@ function utility.load_marks_cwd()
 			end
 		end
 	end
+	-- print(vim.inspect(marks_with_cwd))
 	return marks_with_cwd
 end
 

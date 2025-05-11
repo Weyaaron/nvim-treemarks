@@ -46,7 +46,7 @@ function module.execute(args)
 	end
 
 	local telescope_ui = require("nvim-treemarks.selection_methods").TelescopeUI
-
+	-- print(vim.inspect(marks_with_cwd))
 	telescope_ui.choose_async(marks_with_cwd, on_action)
 end
 
